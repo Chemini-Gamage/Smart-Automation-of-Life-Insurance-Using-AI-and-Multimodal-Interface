@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Union Assurance PLC — AI-Powered Insurance Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ua:#FF5100; --ua-h:#E84800; --ua-dk:#CC3D00;
+            --ua-lt:#FFF0EB; --ua-glow:rgba(255,81,0,.18);
+            --ua-mid:rgba(255,81,0,.10); --ua-faint:rgba(255,81,0,.05);
+            --brown:#4A4441;
+            --ink:#1A1A1A; --ink2:#3D3D3D; --ink3:#6B6B6B; --ink4:#9B9B9B;
+            --bg:#FFFFFF; --bg2:#F8F7F5; --bg3:#F2F0ED; --card:#FFFFFF;
+            --border:rgba(0,0,0,.08); --border2:rgba(0,0,0,.13);
+            --sh-sm:0 1px 4px rgba(0,0,0,.06); --sh-md:0 4px 20px rgba(0,0,0,.09);
+            --sh-lg:0 12px 40px rgba(0,0,0,.12); --sh-xl:0 24px 64px rgba(0,0,0,.15);
+            --r:12px; --r-lg:20px;
+            --nav-bg:#FFFFFF; --nav-t:#3D3D3D; --nav-border:rgba(0,0,0,.07);
+        }
+        [data-theme="dark"] {
+            --ua-lt:rgba(255,81,0,.12); --ua-mid:rgba(255,81,0,.14); --ua-faint:rgba(255,81,0,.06);
+            --ink:#F5F4F2; --ink2:#D0CEC9; --ink3:#8C8884; --ink4:#5C5956;
+            --bg:#0F0E0D; --bg2:#171614; --bg3:#1F1D1B; --card:#1A1917;
+            --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.14);
+            --sh-sm:0 1px 4px rgba(0,0,0,.4); --sh-md:0 4px 20px rgba(0,0,0,.5);
+            --sh-lg:0 12px 40px rgba(0,0,0,.6); --sh-xl:0 24px 64px rgba(0,0,0,.7);
+            --nav-bg:#111010; --nav-t:rgba(255,255,255,.7); --nav-border:rgba(255,255,255,.07);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'Sora',system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+
+        /* THEME PILL */
+        .theme-pill{position:relative;width:50px;height:26px;cursor:pointer;flex-shrink:0;}
+        .theme-pill input{display:none;}
+        .pill-track{position:absolute;inset:0;background:rgba(0,0,0,.1);border:1.5px solid rgba(0,0,0,.15);border-radius:13px;transition:all .3s;}
+        [data-theme="dark"] .pill-track{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15);}
+        .pill-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:.55rem;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 4px rgba(0,0,0,.25);}
+        [data-theme="dark"] .pill-thumb{transform:translateX(24px);}
+
+        /* TOP BAR */
+        .top-bar{background:var(--ua);position:relative;z-index:200;}
+        .top-bar-inner{display:flex;align-items:center;justify-content:space-between;height:36px;}
+        .top-bar a,.top-bar span{color:rgba(255,255,255,.93);font-size:.75rem;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:color .15s;}
+        .top-bar a:hover{color:#fff;}
+        .top-bar-left{display:flex;align-items:center;gap:18px;}
+        .top-bar-right{display:flex;align-items:center;gap:12px;}
+        .tb-sep{width:1px;height:14px;background:rgba(255,255,255,.3);}
+        .tb-lang{border:1px solid rgba(255,255,255,.35);border-radius:4px;padding:2px 10px;font-size:.73rem;font-weight:600;color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
+
+        /* NAVBAR */
+        .ua-nav{background:var(--nav-bg);position:sticky;top:0;z-index:1050;border-bottom:1px solid var(--nav-border);box-shadow:0 2px 12px rgba(0,0,0,.05);transition:background .3s;}
+        .ua-nav-inner{display:flex;align-items:center;height:76px;}
+        .ua-logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0;margin-right:24px;}
+        .ua-logo svg{height:46px;width:auto;display:block;}
+        .ua-nav-links{display:flex;align-items:stretch;height:76px;flex:1;}
+        .ua-nav-link{display:flex;align-items:center;gap:5px;padding:0 13px;font-size:.83rem;font-weight:500;color:var(--nav-t);text-decoration:none;border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .15s;}
+        .ua-nav-link:hover{color:var(--ua);background:var(--ua-faint);}
+        .ua-nav-link.active{color:var(--ua);border-bottom-color:var(--ua);font-weight:600;}
+        .ua-nav-link i{font-size:.65rem;opacity:.6;}
+        .ua-nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+        .btn-cl{display:inline-flex;align-items:center;gap:7px;background:var(--ua);color:#fff;padding:10px 22px;border-radius:6px;font-size:.85rem;font-weight:700;text-decoration:none;transition:all .2s;}
+        .btn-cl:hover{background:var(--ua-h);color:#fff;transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,81,0,.4);}
+        .ua-nav-toggle{display:none;background:none;border:none;color:var(--ink2);font-size:1.5rem;padding:8px;cursor:pointer;}
+
+        /* BREADCRUMB */
+        .ua-bread{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 0;transition:background .3s;}
+        .ua-bread ol{list-style:none;display:flex;gap:6px;font-size:.78rem;}
+        .ua-bread li{display:flex;align-items:center;gap:6px;}
+        .ua-bread li+li::before{content:'/';color:var(--ink4);}
+        .ua-bread a{color:var(--ua);text-decoration:none;font-weight:500;}
+        .ua-bread .cc{color:var(--ink4);}
+
+        /* HERO */
+        /* HERO — solid #FF5100 orange background */
+        .hero{background:#FF5100;position:relative;overflow:hidden;padding:96px 0 88px;}
+        .hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 70% at 75% 50%,rgba(255,255,255,.08) 0%,transparent 65%),radial-gradient(ellipse 40% 60% at 0% 100%,rgba(0,0,0,.08) 0%,transparent 55%);}
+        .hero-grid{position:absolute;inset:0;opacity:.06;background-image:linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px);background-size:60px 60px;}
+        .hero-diag{position:absolute;right:0;top:0;bottom:0;width:42%;background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,rgba(0,0,0,.08) 100%);border-left:1px solid rgba(255,255,255,.15);clip-path:polygon(8% 0%,100% 0%,100% 100%,0% 100%);}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:.7rem;font-weight:700;padding:6px 14px;border-radius:20px;letter-spacing:.07em;text-transform:uppercase;margin-bottom:22px;}
+        .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 2s ease-in-out infinite;}
+        @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.5)}}
+        .hero h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(2.3rem,5vw,3.9rem);font-weight:700;line-height:1.1;color:#fff;margin-bottom:20px;letter-spacing:-.02em;}
+        .hero h1 em{font-style:italic;color:#1A1A1A;}
+        .hero-lead{font-size:1rem;color:rgba(255,255,255,.82);line-height:1.85;max-width:500px;margin-bottom:38px;font-weight:400;}
+        .hero-cta{display:flex;flex-wrap:wrap;gap:12px;}
+        .btn-ph{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#FF5100;padding:13px 28px;border-radius:7px;font-size:.9rem;font-weight:700;text-decoration:none;transition:all .2s;box-shadow:0 4px 20px rgba(0,0,0,.15);}
+        .btn-ph:hover{background:#F0F0F0;color:#E84800;transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.2);}
+        .btn-gh{display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.15);color:#fff;border:1.5px solid rgba(255,255,255,.4);padding:12px 26px;border-radius:7px;font-size:.9rem;font-weight:500;text-decoration:none;transition:all .2s;}
+        .btn-gh:hover{background:rgba(0,0,0,.25);color:#fff;border-color:rgba(255,255,255,.7);}
+        .hero-stats{display:flex;flex-wrap:wrap;gap:32px;margin-top:52px;padding-top:32px;border-top:1px solid rgba(255,255,255,.25);}
+        .s-val{font-family:'Playfair Display',Georgia,serif;font-size:1.9rem;font-weight:700;color:#fff;line-height:1;}
+        .s-val span{color:#1A1A1A;}
+        .s-lbl{font-size:.73rem;color:rgba(255,255,255,.7);margin-top:5px;font-weight:500;letter-spacing:.04em;}
+
+        /* FLOAT CARDS */
+        .float-stack{display:flex;flex-direction:column;gap:14px;}
+        .float-card{background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.5);border-radius:var(--r);padding:18px 22px;backdrop-filter:blur(20px);animation:floatY 7s ease-in-out infinite;box-shadow:0 4px 24px rgba(0,0,0,.15);}
+        .float-card:nth-child(2){margin-left:36px;animation-delay:1.75s;}
+        .float-card:nth-child(3){animation-delay:3.5s;}
+        .float-card:nth-child(4){margin-left:36px;animation-delay:5.25s;}
+        @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+        .fc-icon{width:42px;height:42px;border-radius:10px;background:#FFF0EB;color:#FF5100;display:grid;place-items:center;font-size:1.1rem;flex-shrink:0;}
+        .fc-title{font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:1px;}
+        .fc-desc{font-size:.73rem;color:#6B6B6B;}
+        .fc-bar{height:2px;background:#F0F0F0;border-radius:2px;margin-top:8px;}
+        .fc-fill{height:100%;background:#FF5100;border-radius:2px;}
+        .fc-stat{font-size:1.15rem;font-weight:800;color:#FF5100;line-height:1;}
+        .fc-unit{font-size:.65rem;color:#9B9B9B;margin-top:2px;}
+        .fc-open{display:inline-flex;align-items:center;gap:4px;margin-top:7px;padding:3px 10px;border-radius:5px;background:#FF5100;color:#fff;font-size:.65rem;font-weight:700;text-decoration:none;transition:background .15s;}
+        .fc-open:hover{background:#E84800;color:#fff;}
+
+        /* TRUST BAR */
+        .trust-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:22px 0;transition:background .3s;}
+        .trust-item{display:flex;align-items:center;gap:11px;}
+        .trust-icon{width:38px;height:38px;border-radius:10px;background:var(--ua-lt);color:var(--ua);display:grid;place-items:center;font-size:.95rem;flex-shrink:0;}
+        [data-theme="dark"] .trust-icon{background:var(--ua-mid);}
+        .trust-lbl{font-size:.8rem;font-weight:600;color:var(--ink);transition:color .3s;}
+        .trust-sub{font-size:.7rem;color:var(--ink4);}
+        .trust-sep{width:1px;height:34px;background:var(--border);}
+
+        /* SECTIONS */
+        .sec-eye{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ua);margin-bottom:10px;}
+        .sec-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.75rem,3.4vw,2.6rem);font-weight:700;color:var(--ink);line-height:1.18;letter-spacing:-.02em;transition:color .3s;}
+        .sec-sub{font-size:.93rem;color:var(--ink3);line-height:1.8;max-width:540px;margin:12px auto 0;transition:color .3s;}
+
+        /* AI MODULES */
+        .ai-modules{padding:88px 0;background:var(--bg);transition:background .3s;}
+        .module-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:52px;}
+        @media(max-width:768px){.module-grid{grid-template-columns:1fr;}}
+        .mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:36px 30px;display:flex;flex-direction:column;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:all .25s cubic-bezier(.4,0,.2,1);box-shadow:var(--sh-sm);}
+        .mod-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mc,var(--ua));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+        .mod-card:hover{transform:translateY(-6px);box-shadow:var(--sh-xl);border-color:var(--border2);text-decoration:none;color:inherit;}
+        .mod-card:hover::after{transform:scaleX(1);}
+        .mod-num{font-size:.65rem;font-weight:700;letter-spacing:.1em;color:var(--ink4);text-transform:uppercase;margin-bottom:18px;}
+        .mod-icon{width:58px;height:58px;border-radius:14px;background:var(--mi-bg,var(--ua-lt));color:var(--mc,var(--ua));display:grid;place-items:center;font-size:1.4rem;margin-bottom:20px;transition:transform .2s;}
+        [data-theme="dark"] .mod-icon{background:var(--mi-dk,var(--ua-mid));}
+        .mod-card:hover .mod-icon{transform:scale(1.1) rotate(-4deg);}
+        .mod-title{font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.3;transition:color .3s;}
+        .mod-desc{font-size:.85rem;color:var(--ink3);line-height:1.78;flex:1;transition:color .3s;}
+        .mod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:22px;padding-top:18px;border-top:1px solid var(--border);}
+        .mod-tag{font-size:.66rem;font-weight:600;padding:4px 10px;border-radius:5px;background:var(--mi-bg,var(--ua-lt));color:var(--mc,var(--ua));}
+        [data-theme="dark"] .mod-tag{background:var(--mi-dk,var(--ua-mid));}
+        .mod-arrow{width:32px;height:32px;border-radius:7px;background:var(--bg2);border:1px solid var(--border);display:grid;place-items:center;font-size:.85rem;color:var(--ink4);transition:all .2s;}
+        .mod-card:hover .mod-arrow{background:var(--mc,var(--ua));border-color:transparent;color:#fff;transform:translateX(3px);}
+
+        /* ABOUT */
+        .about-strip{background:#0F0E0D;padding:84px 0;position:relative;overflow:hidden;}
+        .about-strip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 95% 50%,rgba(255,81,0,.09) 0%,transparent 65%);}
+        .about-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#fff;line-height:1.25;letter-spacing:-.02em;}
+        .about-title span{color:var(--ua);font-style:italic;}
+        .about-body{font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.9;font-weight:300;}
+        .about-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:8px 14px;font-size:.8rem;color:rgba(255,255,255,.6);}
+        .about-pill i{color:var(--ua);}
+        .astat{border-radius:var(--r);padding:28px 20px;text-align:center;}
+        .astat-v{font-family:'Playfair Display',Georgia,serif;font-size:2.3rem;font-weight:700;color:#fff;line-height:1;}
+        .astat-v sup{color:var(--ua);font-size:1.2rem;}
+        .astat-l{font-size:.75rem;color:rgba(255,255,255,.38);margin-top:8px;}
+
+        /* FOOTER */
+        .ua-footer{background:#0A0908;color:rgba(255,255,255,.42);padding:56px 0 0;border-top:1px solid rgba(255,255,255,.06);}
+        .ua-footer h6{color:#fff;font-size:.71rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.07);}
+        .ua-footer a{color:rgba(255,255,255,.42);text-decoration:none;font-size:.84rem;transition:color .15s;}
+        .ua-footer a:hover{color:var(--ua);}
+        .ua-footer-btm{border-top:1px solid rgba(255,255,255,.06);margin-top:40px;padding:16px 0;font-size:.75rem;color:rgba(255,255,255,.26);}
+        .f-badge{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:600;padding:4px 10px;border-radius:5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.43);}
+        .f-badge i{color:var(--ua);}
+        .ua-nav-badge{background:var(--ua);color:#fff;font-size:.58rem;font-weight:700;padding:1px 6px;border-radius:5px;}
+        .status-live{display:inline-flex;align-items:center;gap:6px;background:rgba(255,81,0,.08);border:1px solid rgba(255,81,0,.18);border-radius:20px;padding:4px 12px;font-size:.7rem;font-weight:700;color:var(--ua);}
+        .status-live .dot{width:6px;height:6px;border-radius:50%;background:var(--ua);animation:blink 2s infinite;}
+
+        /* RESPONSIVE */
+        @media(max-width:991px){
+            .ua-nav-links{display:none;flex-direction:column;position:absolute;top:76px;left:0;right:0;background:var(--nav-bg);height:auto;padding:8px 0;box-shadow:var(--sh-md);z-index:999;border-bottom:1px solid var(--nav-border);}
+            .ua-nav-links.open{display:flex;}
+            .ua-nav-link{height:auto;padding:12px 24px;border-bottom:none;border-left:3px solid transparent;}
+            .ua-nav-link.active{border-left-color:var(--ua);border-bottom:none;}
+            .ua-nav-toggle{display:block;}
+            .ua-nav-right{margin-left:auto;}
+            .hero{padding:60px 0;}
+            .top-bar-right{display:none;}
+        }
+        @media(max-width:576px){
+            .top-bar-left a:last-child{display:none;}
+        }
+
+        /* FADE UP */
+        .fu{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
+        .fu.in{opacity:1;transform:none;}
+        .d1{transition-delay:.1s;} .d2{transition-delay:.2s;} .d3{transition-delay:.3s;} .d4{transition-delay:.4s;}
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR — #FF5100 -->
+<div class="top-bar">
+    <div class="container top-bar-inner">
+        <div class="top-bar-left">
+            <a href="tel:1330"><i class="bi bi-telephone-fill"></i>1330</a>
+            <div class="tb-sep"></div>
+            <a href="mailto:info@unionassurance.com"><i class="bi bi-envelope-fill"></i>info@unionassurance.com</a>
+        </div>
+        <div class="top-bar-right">
+            <a href="#">Corporate Governance</a>
+            <div class="tb-sep"></div>
+            <a href="#">Customer Information <i class="bi bi-chevron-down"></i></a>
+            <div class="tb-sep"></div>
+            <a href="#">News</a>
+            <div class="tb-sep"></div>
+            <a href="#">Articles <i class="bi bi-chevron-down"></i></a>
+            <div class="tb-sep"></div>
+            <a href="#">Branch Network</a>
+            <div class="tb-sep"></div>
+            <a href="#">Customer Portal</a>
+            <div class="tb-sep"></div>
+            <span class="tb-lang">EN <i class="bi bi-chevron-down"></i></span>
+        </div>
+    </div>
+</div>
+
+<!-- NAVBAR — white bg -->
+<nav class="ua-nav">
+    <div class="container ua-nav-inner">
+        <!-- Inline SVG Logo -->
+        <a class="ua-logo" href="/">
+            <svg width="158" height="50" viewBox="0 0 256 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#nc)">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M97.4149 38.9195L94.44 45.9916H100.367L97.4149 38.9195ZM101.818 49.4275H92.9893L91.7361 52.4169H87.6045L95.3267 34.9845H99.5066L107.228 52.4169H103.072L101.818 49.4275Z" fill="#FF5100"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M121.195 39.1929C120.737 38.7113 120.142 38.3461 119.412 38.0972C118.683 37.8483 117.949 37.7238 117.212 37.7238C116.342 37.7238 115.615 37.8983 115.022 38.2472C114.433 38.595 114.138 39.0602 114.138 39.6407C114.138 40.3711 114.437 40.8725 115.035 41.1481C115.633 41.4214 116.572 41.6158 117.85 41.7332C122.261 42.1147 124.466 43.9991 124.466 47.3862C124.466 48.6145 124.114 49.6637 123.41 50.5349C122.703 51.4073 121.818 52.0295 120.753 52.4018C119.687 52.7775 118.507 52.9717 117.212 52.988C115.638 53.0043 114.162 52.7065 112.786 52.0912C111.408 51.4783 110.376 50.5791 109.687 49.402L111.974 46.9861C112.596 47.7992 113.392 48.4156 114.36 48.8285C115.327 49.2449 116.286 49.452 117.236 49.452C118.252 49.452 119.08 49.26 119.719 48.8786C120.359 48.497 120.678 47.9992 120.678 47.3862C120.695 46.672 120.421 46.1277 119.855 45.7554C119.29 45.3797 118.409 45.1436 117.213 45.0436C116.179 44.9447 115.298 44.8028 114.568 44.6213C113.839 44.4388 113.129 44.1561 112.443 43.7722C111.753 43.3919 111.232 42.8568 110.88 42.1671C110.527 41.4797 110.359 40.6456 110.376 39.6663C110.392 38.0052 111.06 36.7072 112.379 35.7685C113.7 34.831 115.301 34.3611 117.188 34.3611C118.597 34.3611 119.806 34.5611 120.814 34.9601C121.822 35.3579 122.753 36.0558 123.605 37.0515L121.195 39.1929ZM138.752 39.1929C138.295 38.7113 137.7 38.3461 136.969 38.0972C136.24 37.8483 135.507 37.7238 134.768 37.7238C133.899 37.7238 133.172 37.8983 132.58 38.2472C131.99 38.595 131.696 39.0602 131.696 39.6407C131.696 40.3711 131.994 40.8725 132.593 41.1481C133.19 41.4214 134.132 41.6158 135.408 41.7332C139.819 42.1147 142.024 43.9991 142.024 47.3862C142.024 48.6145 141.67 49.6637 140.968 50.5349C140.26 51.4073 139.376 52.0295 138.31 52.4018C137.245 52.7775 136.064 52.9717 134.768 52.988C133.195 53.0043 131.72 52.7065 130.343 52.0912C128.966 51.4783 127.933 50.5791 127.244 49.402L129.532 46.9861C130.154 47.7992 130.949 48.4156 131.916 48.8285C132.884 49.2449 133.844 49.452 134.794 49.452C135.81 49.452 136.638 49.26 137.278 48.8786C137.916 48.497 138.236 47.9992 138.236 47.3862C138.252 46.672 137.978 46.1277 137.413 45.7554C136.847 45.3797 135.965 45.1436 134.768 45.0436C133.736 44.9447 132.855 44.8028 132.124 44.6213C131.396 44.4388 130.688 44.1561 129.999 43.7722C129.31 43.3919 128.79 42.8568 128.437 42.1671C128.085 41.4797 127.917 40.6456 127.933 39.6663C127.949 38.0052 128.618 36.7072 129.937 35.7685C131.258 34.831 132.858 34.3611 134.745 34.3611C136.154 34.3611 137.364 34.5611 138.372 34.9601C139.38 35.3579 140.309 36.0558 141.163 37.0515L138.752 39.1929ZM160.59 35.009V44.7458C160.59 47.2861 159.938 49.2484 158.635 50.6349C157.331 52.0202 155.524 52.7553 153.213 52.8379C150.819 52.9217 148.836 52.2657 147.261 50.8722C145.687 49.4764 144.902 47.435 144.902 44.7458V35.0101H148.713V44.7458C148.713 46.2882 149.115 47.4595 149.918 48.2563C150.721 49.053 151.827 49.4194 153.237 49.352C155.598 49.1856 156.778 47.6502 156.778 44.7458V35.0101L160.59 35.009ZM168.506 38.3205V43.4012H172.886C173.705 43.4012 174.331 43.1511 174.766 42.6532C175.2 42.1554 175.418 41.5913 175.418 40.9609C175.4 40.2793 175.172 39.6697 174.729 39.13C174.285 38.5904 173.655 38.3205 172.835 38.3205H168.506ZM179.942 52.4158H175.688L171.286 46.6883H168.506V52.4158H164.671V34.9834H172.835C174.819 34.9834 176.376 35.5568 177.506 36.7026C178.637 37.8471 179.203 39.2336 179.203 40.8608C179.188 42.1554 178.901 43.257 178.344 44.1596C177.784 45.0645 176.745 45.7904 175.221 46.3382L179.942 52.1156V52.4158ZM191.769 38.9195L188.794 45.9916H194.721L191.769 38.9195ZM196.17 49.4275H187.342L186.09 52.4169H181.957L189.68 34.9845H193.858L201.581 52.4169H197.425L196.17 49.4275ZM216.361 46.3138L216.114 40.8364V34.9845H219.975V52.4158H216.68L208.123 41.2586L208.271 46.9861V52.4158H204.385V34.9845H207.681L216.361 46.3138ZM239.131 50.2988C237.427 52.0086 235.221 52.8636 232.515 52.8636C230.926 52.8636 229.529 52.6181 228.323 52.1296C227.119 51.6388 226.16 50.9665 225.447 50.1127C224.733 49.2566 224.202 48.3016 223.849 47.2478C223.496 46.1939 223.319 45.0528 223.319 43.8246C223.319 42.6638 223.503 41.5448 223.874 40.4747C224.242 39.4045 224.792 38.4216 225.52 37.5248C226.25 36.6281 227.217 35.9139 228.423 35.3835C229.628 34.8519 230.992 34.5867 232.516 34.5867C234.926 34.5867 237.033 35.4824 238.834 37.2759L236.426 39.6907C235.459 38.7288 234.156 38.2472 232.516 38.2472C231.583 38.2472 230.754 38.417 230.032 38.7578C229.312 39.0975 228.742 39.5453 228.324 40.1012C227.906 40.6573 227.598 41.2563 227.402 41.8949C227.205 42.5334 227.106 43.186 227.106 43.849C227.106 44.5306 227.205 45.1738 227.402 45.7798C227.597 46.3847 227.898 46.9582 228.298 47.4979C228.702 48.0375 229.262 48.4691 229.984 48.7925C230.705 49.1158 231.548 49.2787 232.516 49.2787C233.238 49.2787 234 49.1239 234.802 48.8181C235.606 48.511 236.254 48.1073 236.747 47.6084L239.131 50.2988Z" fill="#FF5100"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M256 52.4158H242.893V34.9845H255.655V38.545H246.655V41.9065H255.14V45.3181H246.655V48.8285H256V52.4158Z" fill="#FF5100"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M104.962 10.8325V20.5694C104.962 23.1086 104.31 25.072 103.007 26.4586C101.703 27.8439 99.8961 28.579 97.5851 28.6616C95.1913 28.7453 93.2088 28.0893 91.6329 26.6958C90.0593 25.3001 89.2725 23.2587 89.2725 20.5694V10.8337H93.0859V20.5694C93.0859 22.1129 93.4856 23.2831 94.2885 24.0798C95.0925 24.8767 96.1998 25.2431 97.6092 25.1755C99.9696 25.0092 101.15 23.4738 101.15 20.5694V10.8337H104.962V10.8325ZM122.003 22.1373L121.757 16.6601V10.807H125.617V28.2382H122.322L113.765 17.0822L113.913 22.8096V28.2382H110.027V10.807H113.322L122.003 22.1373Z" fill="#FF5100"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M130.93 28.2393H134.741V10.8081H130.93V28.2393ZM39.0349 69.2072C23.7662 69.2072 11.2198 57.2661 9.97237 42.1252H0C1.27153 62.8353 18.2666 79.3058 39.0349 79.3058C59.8021 79.3058 76.7971 62.8353 78.0675 42.1241H68.0951C66.8477 57.2649 54.3024 69.2072 39.0349 69.2072ZM39.0349 10.0974C54.3024 10.0974 66.8477 22.0397 68.0951 37.1794H78.0675C76.7971 16.4693 59.8009 0 39.0349 0C18.2666 0 1.27153 16.4693 0 37.1794H9.97237C11.2209 22.0397 23.7651 10.0974 39.0349 10.0974Z" fill="#FF5100"/>
+            </g>
+            <defs><clipPath id="nc"><rect width="256" height="80" fill="white"/></clipPath></defs>
+            </svg>
+        </a>
+
+        <button class="ua-nav-toggle" onclick="document.querySelector('.ua-nav-links').classList.toggle('open')">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <div class="ua-nav-links">
+            <a class="ua-nav-link active" href="/">Home</a>
+            <a class="ua-nav-link" href="#">About Us <i class="bi bi-chevron-down"></i></a>
+            <a class="ua-nav-link" href="#">Products <i class="bi bi-chevron-down"></i></a>
+            <a class="ua-nav-link" href="#">Pay Premiums</a>
+            <a class="ua-nav-link" href="#">Calculators <i class="bi bi-chevron-down"></i></a>
+            <a class="ua-nav-link" href="#">Careers <i class="bi bi-chevron-down"></i></a>
+            <a class="ua-nav-link" href="#">FAQ</a>
+            <a class="ua-nav-link" href="#">Contact Us</a>
+        </div>
+
+        <div class="ua-nav-right">
+            <label class="theme-pill" title="Toggle dark/light" onclick="toggleTheme()">
+                <div class="pill-track"></div>
+                <div class="pill-thumb"><i class="bi bi-moon-fill" id="themeIcon"></i></div>
+            </label>
+            <a href="https://insuranceclaimdashboard.pythonanywhere.com/customer?" class="btn-cl"><i class="bi bi-arrow-right"></i> Customer Protal</a>
+        </div>
+    </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="ua-bread">
+    <div class="container">
+        <ol>
+            <li><a href="/"><i class="bi bi-house-fill"></i></a></li>
+            <li><span class="cc">AI Platform — Home</span></li>
+        </ol>
+    </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-diag"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="hero-badge"><span class="dot"></span> AI-Powered Insurance Intelligence</div>
+                <h1>Sri Lanka's Most <em>Advanced</em> Insurance Platform</h1>
+                <p class="hero-lead">Union Assurance PLC combines 37 years of trust with cutting-edge artificial intelligence — delivering faster claims, smarter risk, and seamless policy management for over 1.2 million customers.</p>
+                <div class="hero-cta">
+                    <a href="/submit" class="btn-ph"><i class="bi bi-arrow-right"></i> Get Started</a>
+                    <a href="/reports" class="btn-gh"><i class="bi bi-graph-up-arrow"></i> View Reports</a>
+                </div>
+                <div class="hero-stats">
+                    <div>
+                        <div class="s-val">37<span>+</span></div>
+                        <div class="s-lbl">Years of Excellence</div>
+                    </div>
+                    <div>
+                        <div class="s-val">1.2<span>M</span></div>
+                        <div class="s-lbl">Policies Managed</div>
+                    </div>
+                    <div>
+                        <div class="s-val">98<span>%</span></div>
+                        <div class="s-lbl">Customer Satisfaction</div>
+                    </div>
+                    <div>
+                        <div class="s-val"><span>₨</span>48<span>B</span></div>
+                        <div class="s-lbl">Assets Under Management</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="float-stack">
+                    <!-- Card 1 -->
+                    <div class="float-card">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fc-icon"><i class="bi bi-cpu-fill"></i></div>
+                            <div style="flex:1;min-width:0;">
+                                <div class="fc-title">AI Claims Processing</div>
+                                <div class="fc-desc">Automated in under 48 hours</div>
+                                <div class="fc-bar"><div class="fc-fill" style="width:94%"></div></div>
+                            </div>
+                            <div class="text-end" style="flex-shrink:0;">
+                                <div class="fc-stat">↑ 94%</div>
+                                <div class="fc-unit">Faster</div>
+                                <a href="https://chamindudenuwan.pythonanywhere.com/" target="_blank" class="fc-open">Open <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="float-card">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fc-icon"><i class="bi bi-shield-exclamation"></i></div>
+                            <div style="flex:1;min-width:0;">
+                                <div class="fc-title">Sanction Detection</div>
+                                <div class="fc-desc">Real-time AML/CFT screening</div>
+                                <div class="fc-bar"><div class="fc-fill" style="width:99.8%"></div></div>
+                            </div>
+                            <div class="text-end" style="flex-shrink:0;">
+                                <div class="fc-stat">99.8%</div>
+                                <div class="fc-unit">Accuracy</div>
+                                <a href="https://chamindudenuwan.pythonanywhere.com/" target="_blank" class="fc-open">Open <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="float-card">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fc-icon"><i class="bi bi-graph-up"></i></div>
+                            <div style="flex:1;min-width:0;">
+                                <div class="fc-title">Risk Intelligence</div>
+                                <div class="fc-desc">Predictive analytics engine</div>
+                                <div class="fc-bar"><div class="fc-fill" style="width:69%"></div></div>
+                            </div>
+                            <div class="text-end" style="flex-shrink:0;">
+                                <div class="fc-stat">↓ 31%</div>
+                                <div class="fc-unit">Loss Ratio</div>
+                                <a href="https://risk.unionassurance.lk" target="_blank" class="fc-open">Open <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="float-card">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fc-icon"><i class="bi bi-lightbulb-fill"></i></div>
+                            <div style="flex:1;min-width:0;">
+                                <div class="fc-title">Policy Recommendation</div>
+                                <div class="fc-desc">AI-personalised coverage matching</div>
+                                <div class="fc-bar"><div class="fc-fill" style="width:87%"></div></div>
+                            </div>
+                            <div class="text-end" style="flex-shrink:0;">
+                                <div class="fc-stat">3×</div>
+                                <div class="fc-unit">Conversion</div>
+                                <a href="https://policy-ai.unionassurance.lk" target="_blank" class="fc-open">Open <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center gap-3 gap-md-4">
+            <div class="trust-item"><div class="trust-icon"><i class="bi bi-award-fill"></i></div><div><div class="trust-lbl">IRCSL Regulated</div><div class="trust-sub">Insurance Regulatory Commission</div></div></div>
+            <div class="trust-sep d-none d-md-block"></div>
+            <div class="trust-item"><div class="trust-icon"><i class="bi bi-patch-check-fill"></i></div><div><div class="trust-lbl">SOC 2 Certified</div><div class="trust-sub">Type II Compliance</div></div></div>
+            <div class="trust-sep d-none d-md-block"></div>
+            <div class="trust-item"><div class="trust-icon"><i class="bi bi-lock-fill"></i></div><div><div class="trust-lbl">AML/CFT Compliant</div><div class="trust-sub">Anti-Money Laundering</div></div></div>
+            <div class="trust-sep d-none d-md-block"></div>
+            <div class="trust-item"><div class="trust-icon"><i class="bi bi-bank2"></i></div><div><div class="trust-lbl">John Keells Holdings</div><div class="trust-sub">Part of JKH Group</div></div></div>
+            <div class="trust-sep d-none d-md-block"></div>
+            <div class="trust-item"><div class="trust-icon"><i class="bi bi-star-fill"></i></div><div><div class="trust-lbl">Est. 1987</div><div class="trust-sub">37 Years of Excellence</div></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- AI MODULES -->
+<section class="ai-modules">
+    <div class="container">
+        <div class="text-center">
+            <div class="sec-eye fu">Our AI Capabilities</div>
+            <h2 class="sec-title fu d1">Four Pillars of Intelligent Insurance</h2>
+            <p class="sec-sub fu d2">Explore our AI-powered modules — each designed to transform a critical area of insurance operations with speed, accuracy, and intelligence.</p>
+        </div>
+        <div class="module-grid">
+            <a href="https://insuranceclaimdashboard.pythonanywhere.com/company" target="_blank" rel="noopener"
+               class="mod-card fu d1" style="--mc:#FF5100;--mi-bg:#FFF0EB;--mi-dk:rgba(255,81,0,.12);">
+                <div class="mod-num">Module 01</div>
+                <div class="mod-icon"><i class="bi bi-file-earmark-check-fill"></i></div>
+                <div class="mod-title">Claims Automation</div>
+                <div class="mod-desc">AI-driven end-to-end claims processing that cuts settlement time from weeks to hours. Our intelligent engine validates documents, detects fraud patterns, and auto-approves eligible claims — reducing operational costs by up to 60%.</div>
+                <div class="mod-footer"><span class="mod-tag">Automation · Fraud Detection</span><div class="mod-arrow"><i class="bi bi-arrow-right"></i></div></div>
+            </a>
+            <a href="https://chamindudenuwan.pythonanywhere.com/" target="_blank" rel="noopener"
+               class="mod-card fu d2" style="--mc:#DC2626;--mi-bg:#FFF0F0;--mi-dk:rgba(220,38,38,.12);">
+                <div class="mod-num">Module 02</div>
+                <div class="mod-icon"><i class="bi bi-shield-exclamation"></i></div>
+                <div class="mod-title">Sanction Detection</div>
+                <div class="mod-desc">Real-time AML/CFT screening against global watchlists including OFAC, UN, EU, and local IRCSL lists. Powered by fuzzy-matching algorithms and facial recognition to catch even disguised identities with 99.8% accuracy.</div>
+                <div class="mod-footer"><span class="mod-tag">AML/CFT · Compliance</span><div class="mod-arrow"><i class="bi bi-arrow-right"></i></div></div>
+            </a>
+            <a href="https://insurematch.vercel.app/" target="_blank" rel="noopener"
+               class="mod-card fu d3" style="--mc:#059669;--mi-bg:#ECFDF5;--mi-dk:rgba(5,150,105,.12);">
+                <div class="mod-num">Module 03</div>
+                <div class="mod-icon"><i class="bi bi-lightbulb-fill"></i></div>
+                <div class="mod-title">Policy Recommendation</div>
+                <div class="mod-desc">Hyper-personalised insurance recommendations powered by machine learning. The engine analyses customer demographics, lifestyle, financial profile and claim history to suggest the most suitable coverage — increasing cross-sell conversion by 3×.</div>
+                <div class="mod-footer"><span class="mod-tag">ML · Personalisation</span><div class="mod-arrow"><i class="bi bi-arrow-right"></i></div></div>
+            </a>
+            <a href="https://risk.unionassurance.lk" target="_blank" rel="noopener"
+               class="mod-card fu d4" style="--mc:#7C3AED;--mi-bg:#F5F0FF;--mi-dk:rgba(124,58,237,.12);">
+                <div class="mod-num">Module 04</div>
+                <div class="mod-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                <div class="mod-title">Risk Assessment</div>
+                <div class="mod-desc">Predictive risk modelling that evaluates underwriting risk in real-time. Combining actuarial science with deep learning, our engine processes 200+ risk variables to deliver precise premium calculations and proactive portfolio management.</div>
+                <div class="mod-footer"><span class="mod-tag">Predictive · Underwriting</span><div class="mod-arrow"><i class="bi bi-arrow-right"></i></div></div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT STRIP -->
+<section class="about-strip">
+    <div class="container position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="sec-eye" style="color:var(--ua);">About Union Assurance</div>
+                <h2 class="about-title">Protecting Sri Lanka for <span>Over Three Decades</span></h2>
+                <p class="about-body mt-3">Founded in 1987 and headquartered in Colombo, Union Assurance PLC is a member of the prestigious John Keells Holdings group — one of Sri Lanka's largest diversified conglomerates. We are a leading life insurance provider regulated by the Insurance Regulatory Commission of Sri Lanka (IRCSL).</p>
+                <p class="about-body mt-2">Our mission is to make world-class insurance accessible to every Sri Lankan family and business — backed by financial strength, technological innovation, and an unwavering commitment to customer care.</p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <div class="about-pill"><i class="bi bi-building"></i> JKH Group Company</div>
+                    <div class="about-pill"><i class="bi bi-geo-alt-fill"></i> Colombo, Sri Lanka</div>
+                    <div class="about-pill"><i class="bi bi-people-fill"></i> 2,000+ Employees</div>
+                    <div class="about-pill"><i class="bi bi-award-fill"></i> IRCSL Regulated</div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6"><div class="astat" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);"><div class="astat-v">48<sup>B+</sup></div><div class="astat-l">Assets (LKR)</div></div></div>
+                    <div class="col-6"><div class="astat" style="background:rgba(255,81,0,.1);border:1px solid rgba(255,81,0,.2);"><div class="astat-v">1.2<sup>M</sup></div><div class="astat-l">Active Policies</div></div></div>
+                    <div class="col-6"><div class="astat" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);"><div class="astat-v">200<sup>+</sup></div><div class="astat-l">Branch Network</div></div></div>
+                    <div class="col-6"><div class="astat" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);"><div class="astat-v">37<sup>+</sup></div><div class="astat-l">Years of Trust</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="ua-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="mb-3">
+                    <svg width="140" height="44" viewBox="0 0 256 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#fc)">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M97.4149 38.9195L94.44 45.9916H100.367L97.4149 38.9195ZM101.818 49.4275H92.9893L91.7361 52.4169H87.6045L95.3267 34.9845H99.5066L107.228 52.4169H103.072L101.818 49.4275Z" fill="#FF5100"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M39.0349 69.2072C23.7662 69.2072 11.2198 57.2661 9.97237 42.1252H0C1.27153 62.8353 18.2666 79.3058 39.0349 79.3058C59.8021 79.3058 76.7971 62.8353 78.0675 42.1241H68.0951C66.8477 57.2649 54.3024 69.2072 39.0349 69.2072ZM39.0349 10.0974C54.3024 10.0974 66.8477 22.0397 68.0951 37.1794H78.0675C76.7971 16.4693 59.8009 0 39.0349 0C18.2666 0 1.27153 16.4693 0 37.1794H9.97237C11.2209 22.0397 23.7651 10.0974 39.0349 10.0974Z" fill="#FF5100"/>
+                    </g>
+                    <defs><clipPath id="fc"><rect width="256" height="80" fill="white"/></clipPath></defs>
+                    </svg>
+                </div>
+                <p style="font-size:.83rem;line-height:1.78;max-width:300px;">AI-powered insurance platform with automated claims, AML/CFT screening, intelligent policy recommendations, and predictive risk assessment. IRCSL regulated. Est. 1987.</p>
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                    <span class="f-badge"><i class="bi bi-award-fill"></i>IRCSL</span>
+                    <span class="f-badge"><i class="bi bi-patch-check-fill"></i>SOC 2</span>
+                    <span class="f-badge"><i class="bi bi-lock-fill"></i>AML/CFT</span>
+                    <span class="f-badge"><i class="bi bi-building"></i>JKH Group</span>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <h6>Platform</h6>
+                <div class="d-flex flex-column gap-2">
+                    <a href="/"><i class="bi bi-house me-1"></i>Home</a>
+                    <a href="/submit"><i class="bi bi-person-plus me-1"></i>Submit</a>
+                    <a href="/reports"><i class="bi bi-clipboard-data me-1"></i>Reports <span class="ua-nav-badge ms-1">LIVE</span></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-6">
+                <h6>AI Modules</h6>
+                <div class="d-flex flex-column gap-2">
+                    <a href="https://claims-automation.unionassurance.lk"><i class="bi bi-file-earmark-check me-1"></i>Claims Automation</a>
+                    <a href="https://sanctions.unionassurance.lk"><i class="bi bi-shield-exclamation me-1"></i>Sanction Detection</a>
+                    <a href="https://policy-ai.unionassurance.lk"><i class="bi bi-lightbulb me-1"></i>Policy AI</a>
+                    <a href="https://risk.unionassurance.lk"><i class="bi bi-graph-up-arrow me-1"></i>Risk Assessment</a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h6>Contact</h6>
+                <div class="d-flex flex-column gap-2">
+                    <a href="tel:+94112357000"><i class="bi bi-telephone me-1"></i>+94 11 235 7000</a>
+                    <a href="tel:1330"><i class="bi bi-telephone-fill me-1"></i>1330 (Hotline)</a>
+                    <a href="mailto:info@unionassurance.com"><i class="bi bi-envelope me-1"></i>info@unionassurance.com</a>
+                    <a href="#"><i class="bi bi-geo-alt me-1"></i>20 St Michael's Rd, Colombo 03</a>
+                </div>
+                <div style="margin-top:16px;background:rgba(255,81,0,.08);border:1px solid rgba(255,81,0,.16);border-radius:8px;padding:10px 14px;">
+                    <div class="status-live"><span class="dot"></span> System Status — All Operational</div>
+                </div>
+            </div>
+        </div>
+        <div class="ua-footer-btm d-flex flex-wrap justify-content-between gap-2">
+            <span>© 2025 Union Assurance PLC. All rights reserved. A John Keells Holdings Company.</span>
+            <div class="d-flex gap-3"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleTheme(){
+    const h=document.documentElement,icon=document.getElementById('themeIcon');
+    const dark=h.getAttribute('data-theme')==='dark';
+    h.setAttribute('data-theme',dark?'light':'dark');
+    icon.className=dark?'bi bi-moon-fill':'bi bi-sun-fill';
+    localStorage.setItem('ua-theme',dark?'light':'dark');
+}
+(function(){
+    const s=localStorage.getItem('ua-theme')||'light';
+    document.documentElement.setAttribute('data-theme',s);
+    const i=document.getElementById('themeIcon');
+    if(i)i.className=s==='dark'?'bi bi-sun-fill':'bi bi-moon-fill';
+})();
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
