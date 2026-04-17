@@ -1,5 +1,5 @@
 <div align="center">
-**Deployed at:** [https://smart-automation-of-life-insurance.netlify.app/](https://smart-automation-of-life-insurance.netlify.app/)
+**Deployed at:** https://smart-automation-of-life-insurance.netlify.app/
 
 <hr>
 
