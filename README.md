@@ -1,4 +1,4 @@
-# Smart Automation of Life Insurance Using AI
+# Smart Automation of Life Insurance Using AI and Multimodal Systems
 
 >This final-year research project, conducted at the Sri Lanka Institute of Information Technology, explores AI-driven automation across four core life insurance operations: claims processing, regulatory compliance, risk assessment, and policy recommendation. The research investigates how artificial intelligence techniques, including machine learning, natural language processing, and predictive analytics, can improve operational efficiency, decision-making accuracy, customer experience, and regulatory adherence within the life insurance industry. The proposed framework aims to demonstrate the potential of AI to streamline insurance workflows while supporting data-driven business outcomes.
 This project was developed in collaboration with **Union Assurance PLC**, whose domain expertise, business context, and data insights shaped the problem statements for each module. The technical research, architecture, and implementation are entirely the work of the project team.
